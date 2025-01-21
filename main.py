@@ -95,4 +95,74 @@ class ApplicationSystemUI:
         
         self.output_text = tk.Text(root, height=10, width=60, state="disabled", bg="#e6e6e6")
         self.output_text.pack(padx=20, pady=10)
+    def create_label_and_entry(self, label_text, variable, row):
+        ttk.Label(self.root, text=label_text, background="#f0f0f0").pack(anchor="w", padx=20, pady=5)
+        entry = ttk.Entry(self.root, textvariable=variable)
+        entry.pack(fill="x", padx=20, pady=5)
 
+    def clear_placeholder(self, event):
+        if self.dob_picker.get() == "YYYY-MM-DD":
+            self.dob_picker.delete(0, tk.END)
+
+    def validate_email(self, email):
+        return "@" in email and "." in email
+
+    def validate_name(self, name):
+        return len(name.strip()) > 2
+
+    def validate_dob(self, dob):
+        try:
+            birth_date = datetime.strptime(dob, "%Y-%m-%d")
+            today = datetime.today()
+            age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
+            return age >= 18
+        except ValueError:
+            return False
+
+    def submit_application(self):
+        name = self.name_var.get()
+        email = self.email_var.get()
+        dob = self.dob_var.get()
+        department = self.department_var.get()
+
+        if not name or not email or not dob:
+            messagebox.showerror("Error", "All fields must be filled out.")
+            return
+
+        if not self.validate_name(name):
+            messagebox.showerror("Error", "Full Name must be at least 3 characters long.")
+            return
+
+        if not self.validate_email(email):
+            messagebox.showerror("Error", "Please enter a valid email address.")
+            return
+
+        if not self.validate_dob(dob):
+            messagebox.showerror("Error", "You must be at least 18 years old to apply.")
+            return
+
+        event = ApplicationSentEvent({"name": name, "email": email, "dob": dob, "department": department})
+        communication_queue.append(event)
+
+        self.output_text.config(state="normal")
+        self.output_text.insert(tk.END, f"[APPLY] {name} applied to {department} department.\n")
+        self.output_text.config(state="disabled")
+
+        self.process_application()
+
+    def process_application(self):
+        if not communication_queue:
+            return
+
+        time.sleep(3)  # Simulate processing delay
+
+        self.output_text.config(state="normal")
+        event = communication_queue.pop(0)
+        message = self.university.process_event(event)
+        self.output_text.insert(tk.END, message + "\n")
+        self.output_text.config(state="disabled")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = ApplicationSystemUI(root)
+    root.mainloop()
