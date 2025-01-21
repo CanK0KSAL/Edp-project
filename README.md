@@ -88,5 +88,7 @@ We hope you enjoy using the **Wseiz University Application System**. It’s desi
 Happy applying! 🎓
 
 
-Also if you want to read my new blog about "Unlocking the Power of Event-Driven Programming: Revolutionizing Modern Software Development" 
-You can find in this link; https://medium.com/@cankoksal0506/unlocking-the-power-of-event-driven-programming-revolutionizing-modern-software-development-68ba5229464a
+Also if you want to read my new blog about 
+"Unlocking the Power of Event-Driven Programming: Revolutionizing Modern Software Development" 
+You can find in this link; 
+https://medium.com/@cankoksal0506/unlocking-the-power-of-event-driven-programming-revolutionizing-modern-software-development-68ba5229464a
